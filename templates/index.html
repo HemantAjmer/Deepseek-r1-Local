@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek AI Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #4f46e5;
+            --accent: #ec4899;
+            --background: #0f172a;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(45deg, var(--background), #1e293b);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(16px) saturate(180%);
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .header {
+            padding: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        #themeSwitch {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            max-width: 70%;
+            text-align: right;
+            border-bottom-right-radius: 0.4rem;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            max-width: 70%;
+            border-bottom-left-radius: 0.4rem;
+            position: relative;
+        }
+
+        .bot::before {
+            content: "🤖";
+            position: absolute;
+            left: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4rem;
+        }
+
+        .file-upload {
+            position: relative;
+            margin: 1.5rem auto;
+            width: 95%;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .file-upload.drag-over {
+            border-color: var(--accent);
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        #fileInput {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        #messageInput:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .loader {
+            width: 3rem;
+            height: 3rem;
+            border: 5px solid var(--background);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .light-mode {
+            --background: #f8fafc;
+            --text: #0f172a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> DeepSeek AI Assistant</h1>
+            <div class="theme-toggle">
+                <label for="themeSwitch">🌞/🌙</label>
+                <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+            </div>
+        </div>
+
+        <div class="file-upload">
+            <input type="file" id="fileInput" accept=".csv,.xlsx,.png,.jpg,.jpeg">
+            <div class="upload-prompt">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & drop files or click to upload</p>
+                <small>Supported formats: CSV, Excel, PNG, JPG</small>
+            </div>
+        </div>
+
+        <div id="file-preview" class="preview-container"></div>
+
+        <div class="chat-container">
+            <div class="bot-message">Hello! How can I assist you?</div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Ask me anything...">
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+                Send
+            </button>
+        </div>
+
+        <div class="loader" id="loader"></div>
+    </div>
+
+    <script>
+        const dropArea = document.querySelector('.file-upload');
+        const loader = document.getElementById('loader');
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('drag-over');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('drag-over');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('drag-over');
+            const file = event.dataTransfer.files[0];
+            handleFileUpload(file);
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput').value.trim();
+            if (!input) return;
+
+            loader.style.display = 'block';
+            // Simulate chat for now
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
