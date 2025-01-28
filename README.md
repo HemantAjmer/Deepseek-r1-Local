@@ -98,9 +98,9 @@ Step3: Start Ollama Server
 ```
 # Contact
 
-Name: Hemant Choudhary
-Email: Hemantchoudhary7415@gmail.com
-GitHub: HemantAjmer
+* Name: Hemant Choudhary
+* Email: Hemantchoudhary7415@gmail.com
+* GitHub: HemantAjmer
 
 ## Acknowledgements
   * [Ollama](https://ollama.com/)
