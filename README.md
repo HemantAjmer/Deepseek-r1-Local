@@ -1,6 +1,8 @@
 # **DeepSeek AI Assistant**
 
 DeepSeek AI Assistant is a web application that integrates a chatbot with file processing capabilities. It allows users to upload and preview files, ask questions, and interact with AI in an intuitive interface.
+Using these steps you can run LLM locally.
+Make sure you have more than 16gb ram and atleast 8gb GPU. I would recomment atleast RTX 3080
 
 ---
 
