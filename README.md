@@ -1,7 +1,8 @@
 <div align="center">
   <img src="https://github.com/deepseek-ai/DeepSeek-V2/blob/main/figures/logo.svg?raw=true" width="60%" alt="DeepSeek-V3" />
 </div>
-# **DeepSeek AI Assistant**
+
+## **DeepSeek AI Chattbot using Ollama**
 
 DeepSeek AI Assistant is a web application that integrates a chatbot with file processing capabilities. It allows users to upload and preview files, ask questions, and interact with AI in an intuitive interface.
 Using these steps you can run LLM locally.
